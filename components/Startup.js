@@ -56,8 +56,24 @@ AutoPermissionStartupService.prototype = {
 	{
 		const prefix = 'extensions.autopermission.sites.';
 		Pref.getChildList(prefix, {}).forEach(function(aPref) {
-			let host = aPref.replace(prefix, '');
-			this.applyPermissions(host, Pref.getCharPref(aPref));
+			try {
+				let value = Pref.getCharPref(aPref);
+				value = unescape(encodeURIComponent(value));
+
+				let host;
+				if (value.indexOf(':') > 0) {
+					value = value.replace(/^\s*([^:\s]+)\s*:\s*/, '');
+					host = RegExp.$1;
+				}
+				else {
+					host = aPref.replace(prefix, '');
+				}
+
+				this.applyPermissions(host, value);
+			}
+			catch(e) {
+				mydump(aPref+'\n'+e);
+			}
 		}, this);
 	},
 

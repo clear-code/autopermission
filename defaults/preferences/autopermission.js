@@ -11,3 +11,4 @@
 	2 = deny
 */
 // pref("extensions.autopermission.sites.www.example.com", "popup=1, geo=2, install=2");
+// pref("extensions.autopermission.sites.test-item", "test.example.com: popup=1, geo=2, install=2");

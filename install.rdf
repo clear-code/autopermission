@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="urn:mozilla:install-manifest"
+                   em:id="autopermission@clear-code.com"
+                   em:name="Permissions Auto Registerer"
+                   em:version="0.1"
+                   em:description="Registers websites' permissions automatically."
+                   em:creator="ClearCode Inc."
+                   em:homepageURL="http://www.clear-code.com/">
+
+
+    <!--em:updateURL></em:updateURL-->
+    <!--em:updateKey></em:updateKey-->
+
+
+    <em:localized>
+      <RDF:Description em:locale="en-US"
+                       em:name="Permissions Auto Registerer"
+                       em:description="Registers websites' permissions automatically."
+                       em:creator="ClearCode Inc."
+                       em:homepageURL="http://www.clear-code.com/"/>
+    </em:localized>
+    <em:localized>
+      <RDF:Description em:locale="ja"
+                       em:name="パーミッション自動登録"
+                       em:description="Webサイトのパーミッションを自動的に登録します。"
+                       em:creator=" 株式会社クリアコード"
+                       em:homepageURL="http://www.clear-code.com/"/>
+    </em:localized>
+
+
+	<em:targetApplication>
+      <!-- Firefox -->
+	  <RDF:Description em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+	                   em:minVersion="3.0"
+	                   em:maxVersion="3.5.*" />
+	</em:targetApplication>
+  </RDF:Description>
+</RDF:RDF>

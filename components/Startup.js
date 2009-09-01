@@ -14,6 +14,12 @@ const ObserverService = Cc['@mozilla.org/observer-service;1']
 const Pref = Cc['@mozilla.org/preferences;1']
 		.getService(Ci.nsIPrefBranch)
 
+const IOService = Cc['@mozilla.org/network/io-service;1']
+		.getService(Ci.nsIIOService)
+
+const PermissionManager = Cc['@mozilla.org/permissionmanager;1']
+		.getService(Ci.nsIPermissionManager)
+
 function mydump()
 {
 	if (!DEBUG) return;
@@ -43,6 +49,36 @@ AutoPermissionStartupService.prototype = {
 
 	init : function() 
 	{
+		this.applyAllPermissions();
+	},
+
+	applyAllPermissions : function()
+	{
+		const prefix = 'extensions.autopermission.sites.';
+		Pref.getChildList(prefix, {}).forEach(function(aPref) {
+			let host = aPref.replace(prefix, '');
+			this.applyPermissions(host, Pref.getCharPref(aPref));
+		}, this);
+	},
+
+	applyPermissions : function(aHost, aPermissions)
+	{
+		var UTF8Host = unescape(encodeURIComponent(aHost));
+		aPermissions.split(/\s*[,\|]\s*/).forEach(function(aPermission) {
+			let type, permission;
+			[type, permission] = aPermission.replace(/^\s+|\s+$/g, '').split(/\s*=\s*/);
+
+			try {
+				let uri = IOService.newURI('http://'+aHost, null, null);
+				if (PermissionManager.testPermission(uri, type)) {
+					PermissionManager.remove(UTF8Host, type);
+				}
+				PermissionManager.add(uri, type, parseInt(permission));
+			}
+			catch(e) {
+				mydump(aHost+' '+type+'='+permission+'\n'+e);
+			}
+		});
 	},
 
   

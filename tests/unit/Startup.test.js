@@ -1,3 +1,8 @@
+const Pref = Cc['@mozilla.org/preferences;1']
+		.getService(Ci.nsIPrefBranch)
+const PermissionManager = Cc['@mozilla.org/permissionmanager;1']
+		.getService(Ci.nsIPermissionManager)
+
 var startupModule;
 
 var prefix = 'extensions.autopermission.sites.';
@@ -76,7 +81,7 @@ function test_applyPermissions()
 		let uri = utils.makeURIFromSpec('http://'+aSite.host);
 		for (let i in permissions)
 		{
-			Assert.equals(permissions[i], PermissionManager.testPermission(uri, i));
+			assert.equals(permissions[i], PermissionManager.testPermission(uri, i));
 		}
 	});
 }
@@ -89,7 +94,7 @@ function test_applyAllPermissions()
 		let uri = utils.makeURIFromSpec('http://'+aSite.host);
 		for (let i in permissions)
 		{
-			Assert.equals(permissions[i], PermissionManager.testPermission(uri, i));
+			assert.equals(permissions[i], PermissionManager.testPermission(uri, i));
 		}
 	});
 }

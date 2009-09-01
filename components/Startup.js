@@ -83,13 +83,14 @@ AutoPermissionStartupService.prototype = {
 		aPermissions.split(/\s*[,\|]\s*/).forEach(function(aPermission) {
 			let type, permission;
 			[type, permission] = aPermission.replace(/^\s+|\s+$/g, '').split(/\s*=\s*/);
-
 			try {
+				permission = parseInt(permission);
 				let uri = IOService.newURI('http://'+aHost, null, null);
-				if (PermissionManager.testPermission(uri, type)) {
+				let current = PermissionManager.testPermission(uri, type);
+				if (current != permission)
 					PermissionManager.remove(UTF8Host, type);
-				}
-				PermissionManager.add(uri, type, parseInt(permission));
+				if (permission)
+					PermissionManager.add(uri, type, permission);
 			}
 			catch(e) {
 				mydump(aHost+' '+type+'='+permission+'\n'+e);

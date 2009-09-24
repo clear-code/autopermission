@@ -99,6 +99,9 @@ AutoPermissionStartupService.prototype = {
 	},
 
   
+	classID : kCID,
+	contractID : kID,
+	classDescription : kNAME,
 	QueryInterface : XPCOMUtils.generateQI([Ci.nsIObserver]),
 	_xpcom_categories : [
 		{ category : 'app-startup', service : true }

@@ -58,6 +58,9 @@ AutoPermissionStartupService.prototype = {
 		const prefix = 'extensions.autopermission.sites.';
 		Pref.getChildList(prefix, {}).forEach(function(aPref) {
 			try {
+				if (Pref.getPrefType(aPref) != Pref.PREF_STRING)
+					return;
+
 				let value = Pref.getCharPref(aPref);
 				value = unescape(encodeURIComponent(value));
 
@@ -70,7 +73,17 @@ AutoPermissionStartupService.prototype = {
 					host = aPref.replace(prefix, '');
 				}
 
-				this.applyPermissions(host, value);
+				var lastModified = aPref+'.last';
+				var now = Date.now();
+				if (
+					Pref.getPrefType(lastModified) != Pref.PREF_INT || // not applyed yet, or "override".
+					Pref.getIntPref(lastModified) >= now // if it is a date in the future, then it means "should be overridden".
+					) {
+					this.applyPermissions(host, value);
+					// only if the date is not saved yet, save it. if it have a special value "override" (string), then do nothing.
+					if (Pref.getPrefType(lastModified) == Pref.PREF_INVALID)
+						Pref.setIntPref(lastModified, now);
+				}
 			}
 			catch(e) {
 				mydump(aPref+'\n'+e);

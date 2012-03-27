@@ -6,7 +6,7 @@ Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
 const kCID  = Components.ID('{4048ba30-96a2-11de-8a39-0800200c9a66}'); 
 const kID   = '@clear-code.com/autopermission/startup;1';
-const kNAME = "Permissions Auto Registerer Startup Service";
+const kNAME = "AutoPermissionStartupService";
 
 const ObserverService = Cc['@mozilla.org/observer-service;1']
 		.getService(Ci.nsIObserverService);
@@ -42,6 +42,7 @@ AutoPermissionStartupService.prototype = {
 
 			case 'profile-do-change':
 				ObserverService.removeObserver(this, 'profile-do-change');
+			case 'profile-after-change':
 				this.init();
 				return;
 		}
@@ -109,8 +110,7 @@ AutoPermissionStartupService.prototype = {
  
 }; 
 
-function NSGetModule(aCompMgr, aFileSpec)
-{
-	return XPCOMUtils.generateModule([AutoPermissionStartupService]);
-}
-
+if (XPCOMUtils.generateNSGetFactory)
+	var NSGetFactory = XPCOMUtils.generateNSGetFactory([AutoPermissionStartupService]);
+else
+	var NSGetModule = XPCOMUtils.generateNSGetModule([AutoPermissionStartupService]);

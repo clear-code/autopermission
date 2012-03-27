@@ -87,11 +87,16 @@ AutoPermissionStartupService.prototype = {
 			try {
 				permission = parseInt(permission);
 				let uri = IOService.newURI('http://'+aHost, null, null);
-				let current = PermissionManager.testPermission(uri, type);
-				if (current != permission)
+				if (permission === 0) {
 					PermissionManager.remove(UTF8Host, type);
-				if (permission)
-					PermissionManager.add(uri, type, permission);
+				}
+				else {
+					let current = PermissionManager.testPermission(uri, type);
+					if (current != permission)
+						PermissionManager.remove(UTF8Host, type);
+					if (permission)
+						PermissionManager.add(uri, type, permission);
+				}
 			}
 			catch(e) {
 				mydump(aHost+' '+type+'='+permission+'\n'+e);

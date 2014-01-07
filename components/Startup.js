@@ -64,6 +64,8 @@ AutoPermissionStartupService.prototype = {
 	{
 		const prefix = 'extensions.autopermission.sites.';
 		Pref.getChildList(prefix, {}).forEach(function(aPref) {
+			if (/\.lastValue$/.test(aPref))
+				return;
 			try {
 				if (Pref.getPrefType(aPref) != Pref.PREF_STRING)
 					return;

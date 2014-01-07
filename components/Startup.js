@@ -29,10 +29,10 @@ function mydump()
 }
 
 function UTF8ToUCS2(aString) {
-  return unescape(encodeURIComponent(aString);
+  return decodeURIComponent(escape(aString));
 }
 function UCS2ToUTF8(aString) {
-  return decodeURIComponent(escape(aString));
+  return unescape(encodeURIComponent(aString));
 }
  
 function AutoPermissionStartupService() { 
@@ -100,7 +100,7 @@ AutoPermissionStartupService.prototype = {
 
 	applyPermissions : function(aHost, aPermissions)
 	{
-		var UTF8Host = unescape(encodeURIComponent(aHost));
+		var UTF8Host = UCS2ToUTF8(aHost);
 		aPermissions.split(/\s*[,\|]\s*/).forEach(function(aPermission) {
 			let type, permission;
 			[type, permission] = aPermission.replace(/^\s+|\s+$/g, '').split(/\s*=\s*/);

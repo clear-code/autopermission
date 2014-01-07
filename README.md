@@ -26,6 +26,6 @@ Available types are:
 
 Available vlaues are:
 
- * `0`: unknown
+ * `0`: unknown (clear the stored value)
  * `1`: allow
  * `2`: deny

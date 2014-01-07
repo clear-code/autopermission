@@ -1,5 +1,5 @@
-set appname=%~n0
+set appname=autopermission
 
 copy buildscript\makexpi.sh .\
-bash makexpi.sh -n %appname%
+bash makexpi.sh -n %appname% -o
 del makexpi.sh

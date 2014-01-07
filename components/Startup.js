@@ -27,6 +27,13 @@ function mydump()
 	if (str.charAt(str.length-1) != '\n') str += '\n';
 	dump(str);
 }
+
+function UTF8ToUCS2(aString) {
+  return unescape(encodeURIComponent(aString);
+}
+function UCS2ToUTF8(aString) {
+  return decodeURIComponent(escape(aString));
+}
  
 function AutoPermissionStartupService() { 
 }
@@ -62,7 +69,16 @@ AutoPermissionStartupService.prototype = {
 					return;
 
 				let value = Pref.getCharPref(aPref);
-				value = unescape(encodeURIComponent(value));
+				value = UTF8ToUCS2(value);
+
+				let lastValueKey = aPref+'.lastValue';
+				if (
+					Pref.getPrefType(lastValueKey) == Pref.PREF_STRING &&
+					UTF8ToUCS2(Pref.getCharPref(lastValueKey)) == value
+					)
+					return;
+
+				let lastValue = value;
 
 				let host;
 				if (value.indexOf(':') > 0) {
@@ -73,17 +89,8 @@ AutoPermissionStartupService.prototype = {
 					host = aPref.replace(prefix, '');
 				}
 
-				var lastModified = aPref+'.last';
-				var now = Date.now();
-				if (
-					Pref.getPrefType(lastModified) != Pref.PREF_INT || // not applyed yet, or "override".
-					Pref.getIntPref(lastModified) >= now // if it is a date in the future, then it means "should be overridden".
-					) {
-					this.applyPermissions(host, value);
-					// only if the date is not saved yet, save it. if it have a special value "override" (string), then do nothing.
-					if (Pref.getPrefType(lastModified) == Pref.PREF_INVALID)
-						Pref.setIntPref(lastModified, now);
-				}
+				this.applyPermissions(host, value);
+				Pref.setCharPref(lastValueKey, UCS2ToUTF8(lastValue));
 			}
 			catch(e) {
 				mydump(aPref+'\n'+e);

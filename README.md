@@ -29,3 +29,5 @@ Available vlaues are:
  * `0`: unknown (clear the stored value)
  * `1`: allow
  * `2`: deny
+
+This is mainly designed for corporate-use.

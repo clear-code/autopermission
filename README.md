@@ -31,3 +31,40 @@ Available vlaues are:
  * `2`: deny
 
 This is mainly designed for corporate-use.
+
+
+# Usecase for MCD
+
+You can control permissions like a security policy, with MCD.
+For example:
+
+    var TRUSTED_HOSTS = [
+      "mozilla.com",
+      "mozilla.org"
+    ];
+    
+    var PERM_DEFAULT = 0;
+    var PERM_ALLOW   = 1;
+    var PERM_DENY    = 2;
+    
+    var TRUSTED_HOST_PERMISSIONS = {
+      "cookie":      PERM_DEFAULT,
+      "fullscreen":  PERM_DEFAULT,
+      "geo":         PERM_DEFAULT,
+      "image":       PERM_DEFAULT,
+      "indexedDB":   PERM_DEFAULT,
+      "install":     PERM_DEFAULT,
+      "offline-app": PERM_DEFAULT,
+      "password":    PERM_DEFAULT,
+      "popup":       PERM_ALLOW
+    };
+    
+    //=======================================================================
+    // Apply permissions from definitions
+    //=======================================================================
+    TRUSTED_HOST_PERMISSIONS = Object.keys(TRUSTED_HOST_PERMISSIONS).map(function(aKey) {
+      return aKey + "=" + TRUSTED_HOST_PERMISSIONS[aKey];
+    }).join(", ");
+    TRUSTED_HOSTS.forEach(function(aSite) {
+      pref("extensions.autopermission.sites." + aSite, aSite + ": " + TRUSTED_HOST_PERMISSIONS);
+    });

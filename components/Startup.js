@@ -24,6 +24,9 @@ const IOService = Cc['@mozilla.org/network/io-service;1']
 const PermissionManager = Cc['@mozilla.org/permissionmanager;1']
 		.getService(Ci.nsIPermissionManager)
 
+const SITES_PREFIX = 'extensions.autopermission.sites.';
+const LAST_VALUE_SUFFIX = '.lastValue';
+
 function mydump()
 {
 	if (!DEBUG) return;
@@ -40,6 +43,7 @@ function UCS2ToUTF8(aString) {
 }
  
 function AutoPermissionStartupService() { 
+	this.permissions = {};
 }
 AutoPermissionStartupService.prototype = {
 	 
@@ -61,13 +65,13 @@ AutoPermissionStartupService.prototype = {
 
 	init : function() 
 	{
-		this.applyAllPermissions();
+		this.load();
+		this.applyAll();
 	},
 
-	applyAllPermissions : function()
+	load : function()
 	{
-		const prefix = 'extensions.autopermission.sites.';
-		Pref.getChildList(prefix, {}).forEach(function(aPref) {
+		Pref.getChildList(SITES_PREFIX, {}).forEach(function(aPref) {
 			if (/\.lastValue$/.test(aPref))
 				return;
 			try {
@@ -76,15 +80,6 @@ AutoPermissionStartupService.prototype = {
 
 				let value = Pref.getCharPref(aPref);
 				value = UTF8ToUCS2(value);
-
-				let lastValueKey = aPref+'.lastValue';
-				if (
-					Pref.getPrefType(lastValueKey) == Pref.PREF_STRING &&
-					UTF8ToUCS2(Pref.getCharPref(lastValueKey)) == value
-					)
-					return;
-
-				let lastValue = value;
 
 				let host;
 				if (value.indexOf(':') > 0) {
@@ -95,12 +90,30 @@ AutoPermissionStartupService.prototype = {
 					host = aPref.replace(prefix, '');
 				}
 
-				this.applyPermissions(host, value);
-				Pref.setCharPref(lastValueKey, UCS2ToUTF8(lastValue));
+				this.permissions[host] = value;
 			}
 			catch(e) {
 				mydump(aPref+'\n'+e);
 			}
+		}, this);
+	},
+
+	applyAll : function()
+	{
+		Object.keys(this.permissions).forEach(function(aHost) {
+			var value = this.permissions[aHost];
+
+			var prefKey = SITES_PREFIX + aHost;
+			var lastValueKey = prefKey + LAST_VALUE_SUFFIX;
+			if (
+				Pref.getPrefType(lastValueKey) == Pref.PREF_STRING &&
+				UTF8ToUCS2(Pref.getCharPref(lastValueKey)) == value
+				)
+				return;
+
+			let lastValue = value;
+			this.applyPermissions(aHost, value);
+			Pref.setCharPref(lastValueKey, UCS2ToUTF8(lastValue));
 		}, this);
 	},
 

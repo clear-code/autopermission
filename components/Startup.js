@@ -78,8 +78,9 @@ AutoPermissionStartupService.prototype = {
 
 	loadPolicies : function()
 	{
+		mydump('loadPolicies');
 		var prefix = 'extensions.autopermission.policy.';
-		Pref.getChildList(SITES_PREFIX, {}).forEach(function(aSitesPref) {
+		Pref.getChildList(prefix, {}).forEach(function(aSitesPref) {
 			var matched = aSitesPref.match(/^(.+\.)sites$/)
 			if (!matched)
 				return;
@@ -89,8 +90,11 @@ AutoPermissionStartupService.prototype = {
 
 				var policyPrefix = matched[1];
 				var policyName = policyPrefix.substring(prefix.length, policyPrefix.length - 1);
+				mydump('policy detected: '+policyName);
 				var policy = {};
 				var permissions = Pref.getChildList(policyPrefix, {}).map(function(aPref) {
+						if (/\.sites$/.test(aPref))
+							return null;
 						let name = aPref.substring(policyPrefix.length);
 								let value = Pref.getIntPref(aPref);
 						switch (name)
@@ -120,6 +124,7 @@ AutoPermissionStartupService.prototype = {
 				if (Object.keys(policy).length > 0) {
 					policy.sites = sites.join(' ');
 					this.policies[policyName] = policy;
+					mydump(' => CAPS: '+uneval(policy));
 				}
 			}
 			catch(e) {
@@ -137,6 +142,7 @@ AutoPermissionStartupService.prototype = {
 
 	loadPermissions : function()
 	{
+		mydump('loadPermissions');
 		Pref.getChildList(SITES_PREFIX, {}).forEach(function(aPref) {
 			if (/\.lastValue$/.test(aPref))
 				return;
@@ -156,6 +162,8 @@ AutoPermissionStartupService.prototype = {
 					host = aPref.replace(prefix, '');
 				}
 
+				mydump('permission detected: '+host);
+
 				this.permissions[host] = value;
 			}
 			catch(e) {
@@ -166,6 +174,7 @@ AutoPermissionStartupService.prototype = {
 
 	applyAllPermissions : function()
 	{
+		mydump('applyAllPermissions');
 		Object.keys(this.permissions).forEach(function(aHost) {
 			try {
 				var value = this.permissions[aHost];
@@ -177,6 +186,8 @@ AutoPermissionStartupService.prototype = {
 					UTF8ToUCS2(Pref.getCharPref(lastValueKey)) == value
 					)
 					return;
+
+				mydump('apply permission: '+aHost+' => '+value);
 
 				let lastValue = value;
 				this.applyPermissions(aHost, value);
@@ -216,6 +227,7 @@ AutoPermissionStartupService.prototype = {
 
 	applyAllPolicies : function()
 	{
+		mydump('applyAllPolicies');
 		Object.keys(this.policies).forEach(function(aPolicyName) {
 			var prefix = 'capability.policy.' + aPolicyName + '.';v
 			var policy = this.policies[aPolicyName];
@@ -224,6 +236,7 @@ AutoPermissionStartupService.prototype = {
 					var value = policy(aKey);
 					Pref.setCharPref(prefix + aKey, UCS2ToUTF8(value));
 				}, this);
+				mydump('policy '+aPolicyName+': applied');
 			}
 			catch(e) {
 				mydump(aPolicyName+' '+uneval(policy)+'\n'+e);

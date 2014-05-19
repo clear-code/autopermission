@@ -228,7 +228,9 @@ AutoPermissionStartupService.prototype = {
 	applyAllPolicies : function()
 	{
 		mydump('applyAllPolicies');
-		Object.keys(this.policies).forEach(function(aPolicyName) {
+
+		var names = Object.keys(this.policies);
+		names.forEach(function(aPolicyName) {
 			var prefix = 'capability.policy.' + aPolicyName + '.';
 			var policy = this.policies[aPolicyName];
 			try {
@@ -242,6 +244,25 @@ AutoPermissionStartupService.prototype = {
 				mydump(aPolicyName+' '+uneval(policy)+'\n'+e);
 			}
 		}, this);
+
+		var oldNames = [];
+		try {
+			oldNames = Pref.getCharPref('capability.policy.policynames');
+			oldNames = UTF8ToUCS2(oldNames);
+			mydump('policy names: '+oldNames);
+			oldNames.split(' ');
+		}
+		catch(e) {
+			mydump('no policy');
+		}
+
+		var newNames = {};
+		oldNames.concat(names).forEach(function(aName) {
+			newNames[aName] = true;
+		});
+		newNames = Object.keys(newNames).join(' ');
+		mydump(' => '+newNames);
+		Pref.setCharPref('capability.policy.policynames', UCS2ToUTF8(newNames));
 	},
 
   

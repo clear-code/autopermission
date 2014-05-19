@@ -229,11 +229,11 @@ AutoPermissionStartupService.prototype = {
 	{
 		mydump('applyAllPolicies');
 		Object.keys(this.policies).forEach(function(aPolicyName) {
-			var prefix = 'capability.policy.' + aPolicyName + '.';v
+			var prefix = 'capability.policy.' + aPolicyName + '.';
 			var policy = this.policies[aPolicyName];
 			try {
 				Object.keys(policy).forEach(function(aKey) {
-					var value = policy(aKey);
+					var value = policy[aKey];
 					Pref.setCharPref(prefix + aKey, UCS2ToUTF8(value));
 				}, this);
 				mydump('policy '+aPolicyName+': applied');

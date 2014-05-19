@@ -5,7 +5,7 @@
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="autopermission@clear-code.com"
                    em:name="Permissions Auto Registerer"
-                   em:version="1.0"
+                   em:version="2.0"
                    em:description="Registers websites' permissions automatically."
                    em:creator="ClearCode Inc."
                    em:homepageURL="http://www.clear-code.com/">

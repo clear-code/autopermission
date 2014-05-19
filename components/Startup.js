@@ -27,6 +27,10 @@ const PermissionManager = Cc['@mozilla.org/permissionmanager;1']
 const SITES_PREFIX = 'extensions.autopermission.sites.';
 const LAST_VALUE_SUFFIX = '.lastValue';
 
+const PERM_DEFAULT = 0;
+const PERM_ALLOW   = 1;
+const PERM_DENY    = 2;
+
 function mydump()
 {
 	if (!DEBUG) return;
@@ -44,6 +48,7 @@ function UCS2ToUTF8(aString) {
  
 function AutoPermissionStartupService() { 
 	this.permissions = {};
+	this.policies = {};
 }
 AutoPermissionStartupService.prototype = {
 	 
@@ -65,11 +70,72 @@ AutoPermissionStartupService.prototype = {
 
 	init : function() 
 	{
-		this.load();
-		this.applyAll();
+		this.loadPolicies();
+		this.loadPermissions();
+		this.applyAllPermissions();
+		this.applyAllPolicies();
 	},
 
-	load : function()
+	loadPolicies : function()
+	{
+		var prefix = 'extensions.autopermission.policy.';
+		Pref.getChildList(SITES_PREFIX, {}).forEach(function(aSitesPref) {
+			var matched = aSitesPref.match(/^(.+\.)sites$/)
+			if (!matched)
+				return;
+			try {
+				var sites = Pref.getCharPref(aSitesPref);
+				sites = UTF8ToUCS2(sites).split(/[,\|\s]+/);
+
+				var policyPrefix = matched[1];
+				var policyName = policyPrefix.substring(prefix.length, policyPrefix.length - 1);
+				var policy = {};
+				var permissions = Pref.getChildList(policyPrefix, {}).map(function(aPref) {
+						let name = aPref.substring(policyPrefix.length);
+								let value = Pref.getIntPref(aPref);
+						switch (name)
+						{
+							case 'javascript':
+								policy['javascript.enabled'] = this.translatePermissionToPolicyValue(value);
+								return null;
+
+							case 'localfilelinks':
+								policy['checkloaduri.enabled'] = this.translatePermissionToPolicyValue(value);
+								return null;
+
+							default:
+								return name + '=' + value;
+						}
+					}, this)
+					.filter(function(aValue) {
+						return Boolean(aValue);
+					})
+					.sort()
+					.join(', ');
+
+				sites.forEach(function(aHost) {
+					this.permissions[aHost] = permissions;
+				}, this);
+
+				if (Object.keys(policy).length > 0) {
+					policy.sites = sites.join(' ');
+					this.policies[policyName] = policy;
+				}
+			}
+			catch(e) {
+				mydump(aSitesPref+'\n'+e);
+			}
+		}, this);
+	},
+	translatePermissionToPolicyValue : function(aValue)
+	{
+		if (aValue == PERM_ALLOW)
+			return 'allAccess';
+
+		return 'noAccess';
+	},
+
+	loadPermissions : function()
 	{
 		Pref.getChildList(SITES_PREFIX, {}).forEach(function(aPref) {
 			if (/\.lastValue$/.test(aPref))
@@ -98,7 +164,7 @@ AutoPermissionStartupService.prototype = {
 		}, this);
 	},
 
-	applyAll : function()
+	applyAllPermissions : function()
 	{
 		Object.keys(this.permissions).forEach(function(aHost) {
 			try {
@@ -146,6 +212,23 @@ AutoPermissionStartupService.prototype = {
 				mydump(aHost+' '+type+'='+permission+'\n'+e);
 			}
 		});
+	},
+
+	applyAllPolicies : function()
+	{
+		Object.keys(this.policies).forEach(function(aPolicyName) {
+			var prefix = 'capability.policy.' + aPolicyName + '.';v
+			var policy = this.policies[aPolicyName];
+			try {
+				Object.keys(policy).forEach(function(aKey) {
+					var value = policy(aKey);
+					Pref.setCharPref(prefix + aKey, UCS2ToUTF8(value));
+				}, this);
+			}
+			catch(e) {
+				mydump(aPolicyName+' '+uneval(policy)+'\n'+e);
+			}
+		}, this);
 	},
 
   

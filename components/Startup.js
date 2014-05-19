@@ -101,19 +101,24 @@ AutoPermissionStartupService.prototype = {
 	applyAll : function()
 	{
 		Object.keys(this.permissions).forEach(function(aHost) {
-			var value = this.permissions[aHost];
+			try {
+				var value = this.permissions[aHost];
 
-			var prefKey = SITES_PREFIX + aHost;
-			var lastValueKey = prefKey + LAST_VALUE_SUFFIX;
-			if (
-				Pref.getPrefType(lastValueKey) == Pref.PREF_STRING &&
-				UTF8ToUCS2(Pref.getCharPref(lastValueKey)) == value
-				)
-				return;
+				var prefKey = SITES_PREFIX + aHost;
+				var lastValueKey = prefKey + LAST_VALUE_SUFFIX;
+				if (
+					Pref.getPrefType(lastValueKey) == Pref.PREF_STRING &&
+					UTF8ToUCS2(Pref.getCharPref(lastValueKey)) == value
+					)
+					return;
 
-			let lastValue = value;
-			this.applyPermissions(aHost, value);
-			Pref.setCharPref(lastValueKey, UCS2ToUTF8(lastValue));
+				let lastValue = value;
+				this.applyPermissions(aHost, value);
+				Pref.setCharPref(lastValueKey, UCS2ToUTF8(lastValue));
+			}
+			catch(e) {
+				mydump(aHost+' / '+value+'\n'+e);
+			}
 		}, this);
 	},
 

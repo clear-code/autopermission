@@ -250,7 +250,7 @@ AutoPermissionStartupService.prototype = {
 			oldNames = Pref.getCharPref('capability.policy.policynames');
 			oldNames = UTF8ToUCS2(oldNames);
 			mydump('policy names: '+oldNames);
-			oldNames.split(' ');
+			oldNames = oldNames.split(' ');
 		}
 		catch(e) {
 			mydump('no policy');

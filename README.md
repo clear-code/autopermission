@@ -26,9 +26,18 @@ Available types are:
 
 Available vlaues are:
 
- * `0`: unknown (clear the stored value)
- * `1`: allow
- * `2`: deny
+ * `0`: Unknown. (clear the stored value and follow to the default preference)
+ * `1`: Allow all.
+ * `2`: Deny all.
+
+For Cookies, there are more choices:
+
+ * `0`: Unknown. (clear the stored value and follow to the default preference)
+ * `1`: Allow all cookies permanently.
+ * `2`: Deny all cookies permanently.
+ * `8`: Allow all cookies only for the current session.
+ * `9`: Allow first party cookies permanently, and deny all others.
+ * `10`: Allow first party cookies permanently, and allow third party cookeis also permanently only when they are already accepted.
 
 This is mainly designed for corporate-use.
 

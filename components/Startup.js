@@ -24,6 +24,9 @@ const IOService = Cc['@mozilla.org/network/io-service;1']
 const PermissionManager = Cc['@mozilla.org/permissionmanager;1']
 		.getService(Ci.nsIPermissionManager)
 
+const ConsoleService = Cc['@mozilla.org/consoleservice;1']
+		.getService(Ci.nsIConsoleService)
+
 const SITES_PREFIX = 'extensions.autopermission.sites.';
 const LAST_VALUE_SUFFIX = '.lastValue';
 
@@ -33,9 +36,12 @@ const PERM_DENY    = 2;
 
 function mydump()
 {
-	if (!DEBUG) return;
 	var str = Array.slice(arguments).join('\n');
-	if (str.charAt(str.length-1) != '\n') str += '\n';
+    ConsoleService.logStringMessage('[autopermission] ' + str);
+	if (!DEBUG)
+	  return;
+	if (str.charAt(str.length-1) != '\n')
+	  str += '\n';
 	dump(str);
 }
 

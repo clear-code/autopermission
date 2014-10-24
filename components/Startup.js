@@ -269,8 +269,10 @@ AutoPermissionStartupService.prototype = {
 			newNames[aName] = true;
 		});
 		newNames = Object.keys(newNames).join(' ');
-		mydump(' => '+newNames);
-		Pref.setCharPref('capability.policy.policynames', UCS2ToUTF8(newNames));
+		if (newNames != oldNames.join(' ')) {
+			mydump('updating capability.policy.policynames: => '+newNames);
+			Pref.setCharPref('capability.policy.policynames', UCS2ToUTF8(newNames));
+		}
 	},
 
   

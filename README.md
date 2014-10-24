@@ -23,6 +23,8 @@ Available types are:
  * `image`: Allow to load image files.
  * `install`: Allow to install addons.
  * `offline-app`: Allow to use offline-cache for web applications.
+ * `camera`: Allow to access camera devices.
+ * `microphone`: Allow to access microphone devices.
 
 Available vlaues are:
 
@@ -55,12 +57,14 @@ For example:
     pref("extensions.autopermission.policy.trusted.sites", "mozilla.com,mozilla.org");
 
     // permissions for trusted sites
+    pref("extensions.autopermission.policy.trusted.camera",         PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.cookie",         PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.fullscreen",     PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.geo",            PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.image",          PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.indexedDB",      PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.install",        PERM_ALLOW);
+    pref("extensions.autopermission.policy.trusted.microphone",     PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.offline-app",    PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.password",       PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.popup",          PERM_ALLOW);

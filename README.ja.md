@@ -23,6 +23,8 @@ Webサイト用の設定を以下の形式で定義します。
  * `image`: 画像の読み込みを許可します。
  * `install`: アドオンのインストールを許可します。
  * `offline-app`: Webアプリケーションのオフラインキャッシュの利用を許可します。
+ * `camera`: カメラの利用を許可します。
+ * `microphone`: マイクの利用を許可します。
 
 指定可能な値は以下の通りです。
 
@@ -54,23 +56,16 @@ MCDと組み合わせて利用する場合、以下のようにすると、セ�
     pref("extensions.autopermission.policy.trusted.sites", "mozilla.com,mozilla.org");
 
     // 信頼済みサイトに与える権限
-    // Cookieの保存の可否
+    pref("extensions.autopermission.policy.trusted.camera",         PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.cookie",         PERM_ALLOW);
-    // DOMフルスクリーンの利用の可否
     pref("extensions.autopermission.policy.trusted.fullscreen",     PERM_ALLOW);
-    // 位置情報APIへのアクセスの可否
     pref("extensions.autopermission.policy.trusted.geo",            PERM_ALLOW);
-    // 画像の読み込みの可否
     pref("extensions.autopermission.policy.trusted.image",          PERM_ALLOW);
-    // オフラインストレージの利用の可否
     pref("extensions.autopermission.policy.trusted.indexedDB",      PERM_ALLOW);
-    // アドオンのインストールの可否
     pref("extensions.autopermission.policy.trusted.install",        PERM_ALLOW);
-    // Webアプリケーションのオフラインキャッシュの利用の可否
+    pref("extensions.autopermission.policy.trusted.microphone",     PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.offline-app",    PERM_ALLOW);
-    // パスワードマネージャの利用の可否
     pref("extensions.autopermission.policy.trusted.password",       PERM_ALLOW);
-    // 広告などのポップアップウィンドウを開く事の可否
     pref("extensions.autopermission.policy.trusted.popup",          PERM_ALLOW);
     
     // Firefox本体のポリシー機能との連携

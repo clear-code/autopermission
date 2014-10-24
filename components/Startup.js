@@ -190,10 +190,12 @@ AutoPermissionStartupService.prototype = {
 				if (
 					Pref.getPrefType(lastValueKey) == Pref.PREF_STRING &&
 					UTF8ToUCS2(Pref.getCharPref(lastValueKey)) == value
-					)
+					) {
+					mydump('skip already applied permissions for '+aHost);
 					return;
+				}
 
-				mydump('apply permission: '+aHost+' => '+value);
+				mydump('apply permissions for '+aHost+': '+value);
 
 				let lastValue = value;
 				this.applyPermissions(aHost, value);
@@ -255,11 +257,11 @@ AutoPermissionStartupService.prototype = {
 		try {
 			oldNames = Pref.getCharPref('capability.policy.policynames');
 			oldNames = UTF8ToUCS2(oldNames);
-			mydump('policy names: '+oldNames);
+			mydump('existing policy names: '+oldNames);
 			oldNames = oldNames.split(' ');
 		}
 		catch(e) {
-			mydump('no policy');
+			mydump('no existing policy');
 		}
 
 		var newNames = {};

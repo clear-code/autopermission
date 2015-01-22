@@ -165,7 +165,7 @@ AutoPermissionStartupService.prototype = {
 					host = RegExp.$1;
 				}
 				else {
-					host = aPref.replace(prefix, '');
+					host = aPref.replace(SITES_PREFIX, '');
 				}
 
 				mydump('permission detected: '+host);

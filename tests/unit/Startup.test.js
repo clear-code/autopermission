@@ -90,7 +90,7 @@ function test_applyPermissions()
 		actuals[aSite.host] = actual;
 		expecteds[aSite.host] = expected;
 	});
-        assert.equals(expecteds, actuals);
+	assert.equals(expecteds, actuals);
 }
 
 function test_applyAllPermissions()
@@ -115,5 +115,5 @@ function test_applyAllPermissions()
 		actuals[aSite.host] = actual;
 		expecteds[aSite.host] = expected;
 	});
-        assert.equals(expecteds, actuals);
+	assert.equals(expecteds, actuals);
 }

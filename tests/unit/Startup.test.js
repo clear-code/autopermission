@@ -75,27 +75,42 @@ function tearDown()
 
 function test_applyPermissions()
 {
+	let actuals = {};
+	let expecteds = {};
+
 	sites.forEach(function(aSite) {
 		startupModule.applyPermissions(aSite.host, aSite.permission);
 
 		let uri = utils.makeURIFromSpec('http://'+aSite.host);
-		for (let i in permissions)
+		let actual = {}, expected = {};
+		for (let prop in permissions)
 		{
-			assert.equals(permissions[i], PermissionManager.testPermission(uri, i));
+			actual[prop] = PermissionManager.testPermission(uri, prop);
+			expected[prop] = permissions[prop];
 		}
+		actuals[aSite.host] = actual;
+		expecteds[aSite.host] = expected;
 	});
+        assert.equals(expecteds, actuals);
 }
 
 function test_applyAllPermissions()
 {
 	startupModule.applyAllPermissions();
+	let actuals = {};
+	let expecteds = {};
 
 	sites.forEach(function(aSite) {
 		let uri = utils.makeURIFromSpec('http://'+aSite.host);
-		for (let i in permissions)
+		let actual = {}, expected = {};
+		for (let prop in permissions)
 		{
-			assert.equals(permissions[i], PermissionManager.testPermission(uri, i));
+			actual[prop] = PermissionManager.testPermission(uri, prop);
+			expected[prop] = permissions[prop];
 		}
+		actuals[aSite.host] = actual;
+		expecteds[aSite.host] = expected;
 	});
+        assert.equals(expecteds, actuals);
 }
 

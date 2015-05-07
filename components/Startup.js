@@ -78,7 +78,7 @@ AutoPermissionStartupService.prototype = {
 	{
 		this.loadPolicies();
 		this.loadPermissions();
-		this.applyAllPermissions();
+		this.applyAllPermissions(this.permissions);
 		this.applyAllPolicies();
 	},
 
@@ -178,12 +178,12 @@ AutoPermissionStartupService.prototype = {
 		}, this);
 	},
 
-	applyAllPermissions : function()
+	applyAllPermissions : function(aPermissions)
 	{
 		mydump('applyAllPermissions');
-		Object.keys(this.permissions).forEach(function(aHost) {
+		Object.keys(aPermissions).forEach(function(aHost) {
 			try {
-				var value = this.permissions[aHost];
+				var value = aPermissions[aHost];
 
 				var prefKey = SITES_PREFIX + aHost;
 				var lastValueKey = prefKey + LAST_VALUE_SUFFIX;

@@ -80,7 +80,6 @@ function test_applyPermissions()
 
 	sites.forEach(function(aSite) {
 		startupModule.applyPermissions(aSite.host, aSite.permission);
-
 		let uri = utils.makeURIFromSpec('http://'+aSite.host);
 		let actual = {}, expected = {};
 		for (let prop in permissions)
@@ -118,4 +117,3 @@ function test_applyAllPermissions()
 	});
         assert.equals(expecteds, actuals);
 }
-

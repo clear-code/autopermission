@@ -8,7 +8,7 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
 
-const kCID  = Components.ID('{4048ba30-96a2-11de-8a39-0800200c9a66}'); 
+const kCID  = Components.ID('{4048ba30-96a2-11de-8a39-0800200c9a66}');
 const kID   = '@clear-code.com/autopermission/startup;1';
 const kNAME = "AutoPermissionStartupService";
 
@@ -51,14 +51,14 @@ function UTF8ToUCS2(aString) {
 function UCS2ToUTF8(aString) {
   return unescape(encodeURIComponent(aString));
 }
- 
-function AutoPermissionStartupService() { 
+
+function AutoPermissionStartupService() {
 	this.permissions = {};
 	this.policies = {};
 }
 AutoPermissionStartupService.prototype = {
-	 
-	observe : function(aSubject, aTopic, aData) 
+
+	observe : function(aSubject, aTopic, aData)
 	{
 		switch (aTopic)
 		{
@@ -74,7 +74,7 @@ AutoPermissionStartupService.prototype = {
 		}
 	},
 
-	init : function() 
+	init : function()
 	{
 		this.loadPolicies();
 		this.loadPermissions();
@@ -275,7 +275,7 @@ AutoPermissionStartupService.prototype = {
 		}
 	},
 
-  
+
 	classID : kCID,
 	contractID : kID,
 	classDescription : kNAME,
@@ -283,8 +283,8 @@ AutoPermissionStartupService.prototype = {
 	_xpcom_categories : [
 		{ category : 'app-startup', service : true }
 	]
- 
-}; 
+
+};
 
 if (XPCOMUtils.generateNSGetFactory)
 	var NSGetFactory = XPCOMUtils.generateNSGetFactory([AutoPermissionStartupService]);

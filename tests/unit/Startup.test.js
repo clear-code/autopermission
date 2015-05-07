@@ -98,7 +98,9 @@ function test_applyAllPermissions()
 	let permissionDefinitions = {};
 
 	sites.forEach(function(aSite) {
-		permissionDefinitions[aSite.host] = aSite.value;
+		let parsedPermission = startupModule.parsePermission(aSite.value);
+		let host = parsedPermission.host || aSite.host;
+		permissionDefinitions[host] = parsedPermission.permission;
 	});
 	startupModule.applyAllPermissions(permissionDefinitions);
 	let actuals = {};

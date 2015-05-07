@@ -117,3 +117,16 @@ function test_applyAllPermissions()
 	});
 	assert.equals(expecteds, actuals);
 }
+
+test_parsePermission.parameters = {
+  withHost: {expected: {permission: 'popup=1, geo =1 |install= 2 , image = 1 ',
+                        host: 'host-in-value1.example.com'},
+             input: ' host-in-value1.example.com: popup=1, geo =1 |install= 2 , image = 1 '},
+  withoutHost: {expected : {permission: '  popup=1,geo =1,install= 2,image = 1 ',
+                            host: undefined},
+                input: '  popup=1,geo =1,install= 2,image = 1 '}
+};
+function test_parsePermission(aParameter) {
+  assert.equals(aParameter.expected,
+                startupModule.parsePermission(aParameter.input));
+}

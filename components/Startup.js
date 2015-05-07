@@ -159,23 +159,26 @@ AutoPermissionStartupService.prototype = {
 				let value = Pref.getCharPref(aPref);
 				value = UTF8ToUCS2(value);
 
-				let host;
-				if (value.indexOf(':') > 0) {
-					value = value.replace(/^\s*([^:\s]+)\s*:\s*/, '');
-					host = RegExp.$1;
-				}
-				else {
-					host = aPref.replace(SITES_PREFIX, '');
-				}
-
+				let parsedPermission = this.parsePermission(value);
+				parsedPermission = this.getHost(value);
+				let host = parsedPermission.host || aPref.replace(SITES_PREFIX, '');
 				mydump('permission detected: '+host);
 
-				this.permissions[host] = value;
+				this.permissions[host] = parsedPermission.permission;
 			}
 			catch(e) {
 				mydump(aPref+'\n'+e);
 			}
 		}, this);
+	},
+
+	parsePermission : function(aValue) {
+		let host;
+		if (aValue.indexOf(':') > 0) {
+			aValue = aValue.replace(/^\s*([^:\s]+)\s*:\s*/, '');
+			host = RegExp.$1;
+		}
+		return {permission: aValue, host: host};
 	},
 
 	applyAllPermissions : function(aPermissions)

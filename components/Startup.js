@@ -160,7 +160,6 @@ AutoPermissionStartupService.prototype = {
 				value = UTF8ToUCS2(value);
 
 				let parsedPermission = this.parsePermission(value);
-				parsedPermission = this.getHost(value);
 				let host = parsedPermission.host || aPref.replace(SITES_PREFIX, '');
 				mydump('permission detected: '+host);
 

@@ -3,12 +3,13 @@
 Define a preference for websites, like:
 
     pref("extensions.autopermission.sites.<domain>", "<type1>=<value1>, <type2>=<value2>, ...");
-    pref("extensions.autopermission.sites.<key>", "<domain>: <type1>=<value1>, <type2>=<value2>, ...");
+    pref("extensions.autopermission.sites.<key>", "<origin_or_host>: <type1>=<value1>, <type2>=<value2>, ...");
 
 For example:
 
     pref("extensions.autopermission.sites.www.example.com", "popup=1, geo=2, install=2");
     pref("extensions.autopermission.sites.test-item", "test.example.com: popup=1, geo=2, install=2");
+    pref("extensions.autopermission.sites.test-item", "https://test.example.com:8080: popup=1");
 
 To confirm permissions are correctly applied, see about:permissions.
 

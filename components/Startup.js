@@ -211,12 +211,19 @@ AutoPermissionStartupService.prototype = {
 
 	applyPermissions : function(aOrigin, aPermissions)
 	{
-		var UTF8Host = UCS2ToUTF8(aOrigin);
-		if (!/^https?:\/\//.test(aOrigin))
-			aOrigin = 'http://'+aOrigin;
+		var canAcceptOrigin = 'removePermission' in PermissionManager; // after https://bugzilla.mozilla.org/show_bug.cgi?id=1170200 (Firefox 42 and later)
+		if (canAcceptOrigin && !/^https?:\/\//.test(aOrigin)) {
+			this.applyPermissions('http://' + aOrigin, aPermissions);
+			this.applyPermissions('https://' + aOrigin, aPermissions);
+			return;
+		}
+
+		var host = aOrigin.replace(/^https?\:\/\/|:\d+$/g, '');
+		var UTF8Host = UCS2ToUTF8(host);
+
 		var uri = IOService.newURI(aOrigin, null, null);
 		var removePermissionForType = function(aType) {
-			if ('removePermission' in PermissionManager) // after https://bugzilla.mozilla.org/show_bug.cgi?id=1170200 (Firefox 42 and later)
+			if (canAcceptOrigin)
 				PermissionManager.remove(uri, aType);
 			else
 				PermissionManager.remove(UTF8Host, aType)

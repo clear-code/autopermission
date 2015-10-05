@@ -123,8 +123,8 @@ AutoPermissionStartupService.prototype = {
 					.sort()
 					.join(', ');
 
-				sites.forEach(function(aHost) {
-					this.permissions[aHost] = permissions;
+				sites.forEach(function(aOrigin) {
+					this.permissions[aOrigin] = permissions;
 				}, this);
 
 				if (Object.keys(policy).length > 0) {
@@ -160,10 +160,10 @@ AutoPermissionStartupService.prototype = {
 				value = UTF8ToUCS2(value);
 
 				let parsedPermission = this.parsePermission(value);
-				let host = parsedPermission.host || aPref.replace(SITES_PREFIX, '');
-				mydump('permission detected: '+host);
+				let origin = parsedPermission.origin || aPref.replace(SITES_PREFIX, '');
+				mydump('permission detected: '+origin);
 
-				this.permissions[host] = parsedPermission.permission;
+				this.permissions[origin] = parsedPermission.permission;
 			}
 			catch(e) {
 				mydump(aPref+'\n'+e);
@@ -172,65 +172,73 @@ AutoPermissionStartupService.prototype = {
 	},
 
 	parsePermission : function(aValue) {
-		let host;
+		let origin;
 		if (aValue.indexOf(':') > 0) {
-			aValue = aValue.replace(/^\s*([^:\s]+)\s*:\s*/, '');
-			host = RegExp.$1;
+			aValue = aValue.replace(/^\s*((?:https?\/\/)?[^:\s]+)\s*:\s*/, '');
+			origin = RegExp.$1;
 		}
-		return {permission: aValue, host: host};
+		return {permission: aValue, origin: origin};
 	},
 
 	applyAllPermissions : function(aPermissions)
 	{
 		mydump('applyAllPermissions');
-		Object.keys(aPermissions).forEach(function(aHost) {
+		Object.keys(aPermissions).forEach(function(aOrigin) {
 			try {
-				var value = aPermissions[aHost];
+				var value = aPermissions[aOrigin];
 
-				var prefKey = SITES_PREFIX + aHost;
+				var prefKey = SITES_PREFIX + aOrigin;
 				var lastValueKey = prefKey + LAST_VALUE_SUFFIX;
 				if (
 					Pref.getPrefType(lastValueKey) == Pref.PREF_STRING &&
 					UTF8ToUCS2(Pref.getCharPref(lastValueKey)) == value
 					) {
-					mydump('skip already applied permissions for '+aHost);
+					mydump('skip already applied permissions for '+aOrigin);
 					return;
 				}
 
-				mydump('apply permissions for '+aHost+': '+value);
+				mydump('apply permissions for '+aOrigin+': '+value);
 
 				let lastValue = value;
-				this.applyPermissions(aHost, value);
+				this.applyPermissions(aOrigin, value);
 				Pref.setCharPref(lastValueKey, UCS2ToUTF8(lastValue));
 			}
 			catch(e) {
-				mydump(aHost+' / '+value+'\n'+e);
+				mydump(aOrigin+' / '+value+'\n'+e);
 			}
 		}, this);
 	},
 
-	applyPermissions : function(aHost, aPermissions)
+	applyPermissions : function(aOrigin, aPermissions)
 	{
-		var UTF8Host = UCS2ToUTF8(aHost);
+		var UTF8Host = UCS2ToUTF8(aOrigin);
+		if (!/^https?:\/\//.test(aOrigin))
+			aOrigin = 'http://'+aOrigin;
+		var uri = IOService.newURI(aOrigin, null, null);
+		var removePermissionForType = function(aType) {
+			if ('removePermission' in PermissionManager) // after https://bugzilla.mozilla.org/show_bug.cgi?id=1170200 (Firefox 42 and later)
+				PermissionManager.remove(uri, aType);
+			else
+				PermissionManager.remove(UTF8Host, aType)
+		};
 		aPermissions.split(/\s*[,\|]\s*/).forEach(function(aPermission) {
 			let type, permission;
 			[type, permission] = aPermission.replace(/^\s+|\s+$/g, '').split(/\s*=\s*/);
 			try {
 				permission = parseInt(permission);
-				let uri = IOService.newURI('http://'+aHost, null, null);
 				if (permission === 0) {
-					PermissionManager.remove(UTF8Host, type);
+					removePermissionForType(type);
 				}
 				else {
 					let current = PermissionManager.testPermission(uri, type);
 					if (current != permission)
-						PermissionManager.remove(UTF8Host, type);
+						removePermissionForType(type);
 					if (permission)
 						PermissionManager.add(uri, type, permission);
 				}
 			}
 			catch(e) {
-				mydump(aHost+' '+type+'='+permission+'\n'+e);
+				mydump(aOrigin+' '+type+'='+permission+'\n'+e);
 			}
 		});
 	},

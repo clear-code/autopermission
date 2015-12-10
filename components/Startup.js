@@ -172,7 +172,7 @@ AutoPermissionStartupService.prototype = {
 	parsePermission : function(aValue) {
 		let origin;
 		if (aValue.indexOf(':') > 0) {
-			aValue = aValue.replace(/^\s*((?:https?\/\/)?[^:\s]+(?::\d+)?)\s*:\s*/, '');
+			aValue = aValue.replace(/^\s*((?:https?:\/\/)?[^:\s]+(?::\d+)?)\s*:\s*/, '');
 			origin = RegExp.$1;
 		}
 		return {permission: aValue, origin: origin};

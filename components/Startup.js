@@ -34,10 +34,10 @@ const PERM_DENY    = 2;
 
 function mydump()
 {
-	var str = Array.slice(arguments).join('\n');
-    ConsoleService.logStringMessage('[autopermission] ' + str);
 	if (!Pref.getBoolPref("extensions.autopermission.debug"))
 	  return;
+	var str = '[autopermission] ' + Array.slice(arguments).join('\n');
+	ConsoleService.logStringMessage(str);
 	if (str.charAt(str.length-1) != '\n')
 	  str += '\n';
 	dump(str);

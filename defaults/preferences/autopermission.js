@@ -41,3 +41,6 @@
 // // CAPS compatible configuration (to be converted to CAPS configurations)
 // pref("extensions.autopermission.policy.trusted.javascript", 1);
 // pref("extensions.autopermission.policy.trusted.localfilelinks", 1);
+
+
+pref("extensions.autopermission.debug", false);

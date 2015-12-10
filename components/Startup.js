@@ -2,8 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-const DEBUG = false;
-
 const Cc = Components.classes;
 const Ci = Components.interfaces;
 Components.utils.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -38,7 +36,7 @@ function mydump()
 {
 	var str = Array.slice(arguments).join('\n');
     ConsoleService.logStringMessage('[autopermission] ' + str);
-	if (!DEBUG)
+	if (!Pref.getBoolPref("extensions.autopermission.debug"))
 	  return;
 	if (str.charAt(str.length-1) != '\n')
 	  str += '\n';

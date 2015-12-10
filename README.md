@@ -11,7 +11,8 @@ For example:
     pref("extensions.autopermission.sites.test", "test.example.com: popup=1, geo=2, install=2");
     pref("extensions.autopermission.sites.test-secure", "https://test.example.com:8080: popup=1");
 
-Any character is available for the identifier. You need to use the format if you hope to apply new permissions only for "https:" version webpages.
+Any character is available for the identifier, if it is acceptable as a preference name specified as an UTF-8 bytes array.
+You need to use the format when you hope to apply new permissions only for "https:" version webpages.
 
 To confirm permissions are correctly applied, see about:permissions.
 

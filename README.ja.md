@@ -1,3 +1,5 @@
+ダウンロードリンク：https://addons.mozilla.org/firefox/addon/permissions-auto-registerer/
+
 # 使い方
 
 Webサイト用の設定を以下の形式で定義します。

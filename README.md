@@ -1,3 +1,5 @@
+Download link: https://addons.mozilla.org/firefox/addon/permissions-auto-registerer/
+
 # How to use
 
 Define a preference for websites, like:

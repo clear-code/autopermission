@@ -31,6 +31,7 @@ Available types are:
  * `offline-app`: Allow to use offline-cache for web applications.
  * `camera`: Allow to access camera devices.
  * `microphone`: Allow to access microphone devices.
+ * `push`: Allow websites to notify users of new messages or updated content.
 
 Available vlaues are:
 
@@ -74,6 +75,7 @@ For example:
     pref("extensions.autopermission.policy.trusted.offline-app",    PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.password",       PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.popup",          PERM_ALLOW);
+    pref("extensions.autopermission.policy.trusted.push",           PERM_ALLOW);
     
     // special permissions for trusted sites, based on Firefox's capability settings
     // allow/deny to run scripts in the site

@@ -31,6 +31,7 @@ Webサイト用の設定を以下の形式で定義します。
  * `offline-app`: Webアプリケーションのオフラインキャッシュの利用を許可します。
  * `camera`: カメラの利用を許可します。
  * `microphone`: マイクの利用を許可します。
+ * `push`: Webサイトがユーザに新しいメッセージや最新のコンテンツを通知することを許可します。
 
 指定可能な値は以下の通りです。
 
@@ -73,6 +74,7 @@ MCDと組み合わせて利用する場合、以下のようにすると、セ�
     pref("extensions.autopermission.policy.trusted.offline-app",    PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.password",       PERM_ALLOW);
     pref("extensions.autopermission.policy.trusted.popup",          PERM_ALLOW);
+    pref("extensions.autopermission.policy.trusted.push",           PERM_ALLOW);
     
     // Firefox本体のポリシー機能との連携
     // JavaScriptの実行の可否

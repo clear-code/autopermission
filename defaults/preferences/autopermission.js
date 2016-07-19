@@ -12,6 +12,7 @@
 	offline-app : HTML5 offline API (storage, etc.)
 	password    : password manager
 	popup       : popup blocker
+	push        : Web Push notifications
 
 	0 = unknown
 	1 = allow
@@ -38,6 +39,7 @@
 // pref("extensions.autopermission.policy.trusted.offline-app", 1);
 // pref("extensions.autopermission.policy.trusted.password", 1);
 // pref("extensions.autopermission.policy.trusted.popup", 1);
+// pref("extensions.autopermission.policy.trusted.push", 1);
 // // CAPS compatible configuration (to be converted to CAPS configurations)
 // pref("extensions.autopermission.policy.trusted.javascript", 1);
 // pref("extensions.autopermission.policy.trusted.localfilelinks", 1);

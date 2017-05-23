@@ -9,7 +9,8 @@
                    em:type="2"
                    em:description="Registers websites' permissions automatically."
                    em:creator="ClearCode Inc."
-                   em:homepageURL="http://www.clear-code.com/">
+                   em:homepageURL="http://www.clear-code.com/"
+                   em:multiprocessCompatible="true">
 
 
     <!--em:updateURL></em:updateURL-->
@@ -36,13 +37,13 @@
       <!-- Firefox -->
 	  <RDF:Description em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
 	                   em:minVersion="38.0"
-	                   em:maxVersion="45.0a1" />
+	                   em:maxVersion="55.0a1" />
 	</em:targetApplication>
 	<em:targetApplication>
       <!-- Prism -->
 	  <RDF:Description em:id="prism@developer.mozilla.org"
 	                   em:minVersion="38.0"
-	                   em:maxVersion="45.0a1" />
+	                   em:maxVersion="55.0a1" />
 	</em:targetApplication>
   </RDF:Description>
 </RDF:RDF>
